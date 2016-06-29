@@ -1,0 +1,1138 @@
+<! DOCTYPE HTML>
+<html>
+<head>
+<title> Audio Player </title>
+
+<style>
+
+		html,body {
+				-webkit-font-smoothing:antialiased;
+				-webkit-text-size-adjust:100%;
+				background: radial-gradient(circle, hsla(257,60%,45%,.9) 1%,hsla(260,50%,5%,1)  100%);
+				color:#C8C7C8;
+				font:20px/24px "Yanone Kaffeesatz", HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
+				font-weight:300;
+					padding:5px 0;
+
+				}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1em;
+  line-height: 1.6;
+   
+  mix-blend-mode:xor;
+  overflow:hidden;
+
+}
+
+.container {
+  height: 90vh;
+  /*width: 100vw;*/
+  /*background: linear-gradient(120deg, #e08afa, #6f36f8); */
+  border-top: 5px solid orange;
+  border-bottom: 5px solid orange;
+  background: radial-gradient(circle, hsla(257,60%,45%,.9) 1%,hsla(260,50%,5%,1)  100%);
+}
+label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 500px;
+  height: 650px;
+  border-radius: 66px;
+  background: radial-gradient(#ebb0fb, #fef8ff);
+  box-shadow: 0 10px 30px 0px rgba(0, 0, 0, 0.7), inset 0 -15px 10px 5px rgba(235, 176, 251, 0.7);
+  cursor: pointer;
+}
+
+.circle {
+  position: absolute;
+  top: 68%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  display: block;
+  width: 400px;
+  height: 370px;
+  border-radius: 10%;
+  background: linear-gradient(140deg, #ed99fb 30%, #c1bbfc 50%, rgba(255,255,255,.6) 70%);
+
+}
+
+.circle-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  display: block;
+  width: 380px;
+  height: 350px;
+  border-radius: 10%;
+  background: -webkit-linear-gradient(140deg, #bc29c7 30%, #00b7eb 70%);
+  /*box-shadow: inset 0 0 0 2px rgba(0, 181, 230, .2), inset 0 5px 10px 3px rgba(0, 0, 0, 0.7); */
+ -webkit-box-shadow: inset 0px 1px 45px 16px rgba(0,0,0,0.75);
+-moz-box-shadow: inset 0px 1px 45px 16px rgba(0,0,0,0.75);
+box-shadow: inset 0px 1px 45px 16px rgba(0,0,0,0.75);
+}
+
+.display-box{
+	position:absolute;
+	top: 20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+  	overflow: hidden;
+  	display: block;
+  	width: 400px;
+  	height: 130px;
+  	border-radius: 10%;
+  	background: linear-gradient(140deg, #ed99fb 30%, #c1bbfc 50%, rgba(255,255,255,.6) 70%);
+}
+
+div#audio_player{ 
+	position: absolute;
+	top:50%;
+	left:50%;
+	width:380px; 
+	height:110px;
+	transform: translate(-50%, -50%);
+	overflow: hidden;
+	display: block;
+ 	/*background-image: url("speaker1.png"); background-repeat: no-repeat; 
+ 	background-size: 450px 100px;*/ 
+ 	background: -webkit-linear-gradient(140deg, #bc29c7 30%, #00b7eb 70%);
+ 	box-shadow: inset 0 0 0 2px rgba(0, 181, 230, .2), inset 0 5px 10px 3px rgba(0, 0, 0, 0.7);
+ 	/*background-color:cyan;  
+ 	border-radius:10%;
+ 	/*background: -webkit-linear-gradient(top, rgba(204,139,26,1) 0%, rgba(199,168,16,1) 90%, rgba(240,211,93,1) 100%); */		
+}
+
+div#audio_controls > button {border: none; cursor:pointer; outline:none; display:block; float:left; margin:60px 10px 0px 0px; }
+div#audio_controls > input {outline:none; display:block; float:left; margin:100px 50px 20px 5px;}
+
+input#seekslider{
+	width:100px;
+	position:relative;
+	left:25px;
+}
+
+input#volumeslider{
+	width:70px;
+	position:relative;
+	left:25px;
+}
+input[type='range']{
+	-webkit-appearance: none !important;
+	margin-top: 0px;
+	padding: 0px;
+	height: 3px;
+	border-bottom: #333 1px solid;
+}
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none !important;
+	background: white;
+	height: 11px;
+	width: 11px;
+	border: 1px solid black;
+	border-radius: 100%;
+	
+}
+div#timebox{
+	display:block;
+	margin: 90px 10px 0px 0px;
+	float:left;
+	width:80px;
+	border-bottom: #333 1px solid;
+	text-align: center;
+	font-size: 12px;
+}
+
+#control-space{
+	height:100px;
+	width:300px;
+	position:relative;
+	top:198px;
+	left:-50px;
+	z-index:1;
+
+}
+.container_button {
+	position:relative;
+    background-color: #252525;
+    width: 35px;
+    height: 35px;
+    top:7px;
+    margin:auto;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    -webkit-box-shadow: inset 0px 2px 0px #585858, 1px 1px 0px #000, 2px 2px 5px #000;
+    -moz-box-shadow: inset 0px 2px 0px #585858, 1px 1px 0px #000, 2px 2px 5px #000;
+    box-shadow: inset 0px 2px 0px #585858, 1px 1px 0px #000, 2px 2px 5px #000; 
+}
+
+.hole{
+	background-color: #151515;
+    position:relative;
+    top: 3px;
+    left: 1px;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    padding: 15px auto;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    /*-webkit-box-shadow: 1px 1px 0px #5d5d5d;
+    -moz-box-shadow: 1px 1px 0px #5d5d5d;
+    box-shadow: 1px 1px 0px #5d5d5d; */
+}
+.button {
+    width: 25px;
+    height: 25px;
+    margin:0 auto;
+    overflow: auto;
+    cursor: pointer;
+    top: 3px;
+    position: relative;
+    background-image: linear-gradient(bottom, rgb(82,79,82) 0%, rgb(134,134,134) 57%);
+    background-image: -o-linear-gradient(bottom, rgb(82,79,82) 0%, rgb(134,134,134) 57%);
+    background-image: -moz-linear-gradient(bottom, rgb(82,79,82) 0%, rgb(134,134,134) 57%);
+    background-image: -webkit-linear-gradient(bottom, rgb(82,79,82) 0%, rgb(134,134,134) 57%);
+    background-image: -ms-linear-gradient(bottom, rgb(82,79,82) 0%, rgb(134,134,134) 57%);
+    -webkit-border-radius: 150px;
+    -moz-border-radius: 150px;
+    border-radius: 150px;
+    /*-webkit-box-shadow: inset 0px 2px 0px #a8a8a8, 0px 2px 0px #2a2a2a, 0px 3px 0px #2a2a2a, 0px 4px 0px #2a2a2a, 0px 5px 0px #2a2a2a, 0px 6px 0px #2a2a2a, 0px 7px 0px #2a2a2a, 0px 8px 0px #2a2a2a, 0px 9px 0px #2a2a2a, 0px 10px 0px #2a2a2a, 10px 20px 10px #000;
+    -moz-box-shadow: inset 0px 2px 0px #a8a8a8, 0px 2px 0px #2a2a2a, 0px 3px 0px #2a2a2a, 0px 4px 0px #2a2a2a, 0px 5px 0px #2a2a2a, 0px 6px 0px #2a2a2a, 0px 7px 0px #2a2a2a, 0px 8px 0px #2a2a2a, 0px 9px 0px #2a2a2a, 0px 10px 0px #2a2a2a, 10px 20px 10px #000;
+    box-shadow: inset 0px 2px 0px #a8a8a8, 0px 2px 0px #2a2a2a, 0px 3px 0px #2a2a2a, 0px 4px 0px #2a2a2a, 0px 5px 0px #2a2a2a, 0px 6px 0px #2a2a2a, 0px 7px 0px #2a2a2a, 0px 8px 0px #2a2a2a, 0px 9px 0px #2a2a2a, 0px 10px 0px #2a2a2a, 10px 20px 10px #000; */
+    -webkit-box-shadow: 8px 8px 5px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 8px 8px 5px 0px rgba(0,0,0,0.75);
+box-shadow: 8px 8px 5px 0px rgba(0,0,0,0.75);
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    transition: all .2s;
+}
+.button:active {
+    top: 3px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: inset 0px 1px 0px #a8a8a8;
+}
+#triangle {
+    width: 0px;
+    height: 0px;
+    margin-left: 50%;
+    margin-top: 50%;
+    left: -3px;
+    top: -8px;
+    position: relative;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 12px solid #22a9db;
+    z-index: 2;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+}
+
+#pause {
+	margin-left:5px;
+	margin-top:4px;
+    width: 3px;
+    height: 15px;
+    border-right: 6px solid #22a9db;
+    border-left: 6px solid #22a9db;
+}
+
+#on-circle{
+	position:relative;
+	left:70px;
+	top:-47px;
+	/*background-color: #99ff99; */
+	background-color: red;
+	height:20px;
+	width:20px;
+	border-radius:100%;
+	border: 0.5px solid gray;
+    -webkit-filter: blur(1px);
+    float:left;
+    z-index:1;
+}
+
+#shuffle{
+	position:relative;
+	left:260px;
+	top:-45px;
+	
+}
+
+
+#repeat{
+	position:relative;
+	left: 340px;
+	top: -95px;
+}
+
+#repeat_circle{
+	position:absolute;
+	left:230px;
+	top:15px;
+	/*background-color: #99ff99;*/
+	background-color: red;
+	height:20px;
+	width:20px;
+	border-radius:100%;
+	border: 0.5px solid gray;
+    -webkit-filter: blur(1px);
+    z-index:-3;
+
+}
+#mutebtn{
+	position: relative;
+	left: 300px;
+	top: -158px;
+
+}
+
+#spinner{
+	position:absolute;
+	top:140px;
+	left:550px;
+	height:500px;
+	width:500px;
+	z-index:0;
+}
+
+#playlist_status{
+	-webkit-marquee: auto medium infinite scroll normal; 
+	overflow-x: -webkit-marquee;
+}
+
+#mute_icon{
+	position: relative;
+	background-image: url("mute-icon.png");
+	background-size:18px 18px;
+	background-repeat: no-repeat;
+	left:3px;
+	top:3px;
+	height:18px;
+	width: 18px;
+
+}
+
+#muter{
+	position: relative;
+	background-image: url("media-volume-3.png");
+	background-size:18px 18px;
+	background-repeat: no-repeat;
+	left:3px;
+	top:3px;
+	height:18px;
+	width: 18px;
+}
+
+#credits{
+	position: absolute;
+	font-size:20px;
+	color:gray;
+	top:570px;
+	left:65px;
+	z-index:0;
+}
+
+#song_display{
+	position: absolute;
+	left: 60px;
+	top:-20px;
+	width:400px;
+	z-index:0;
+}
+
+
+
+
+#plwrap { margin:0 auto; width:380px;border:1px solid white; margin-top:-25px;}
+#plList { margin-left:-40px; z-index:1; }
+#plList li {background-color:gray; cursor:pointer; margin:0; padding:3px 0; border-bottom:1px solid black; -webkit-box-shadow: inset 2px 0px 15px 9px rgba(0,0,0,0.75); -moz-box-shadow: inset 2px 0px 15px 9px rgba(0,0,0,0.75);
+box-shadow: inset 2px 0px 15px 9px rgba(0,0,0,0.75);}
+#plList li:hover { background-color:#262223; }
+.plItem { position:relative; }
+.plItem { position:relative; }
+.plTitle { left:50px; overflow:hidden; position:absolute; right:65px; text-overflow:ellipsis; top:0; white-space:nowrap; }
+.plNum { padding-left:21px; width:25px; }
+.plLength { padding-left:21px; position:absolute; right:21px; top:0; }
+
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/TweenMax.min.js"></script>
+<link rel="stylesheet" type="text/css" href="unsunghero.css">
+<script>
+var audio, mutebtn, seekslider, playbtn, volumeslider, seeking, seekto, curtimetext, durtimetext, playlist_status, dir, playlist, playlist_index, songlist_index;
+var on = false;
+var on1 = false;
+var roses, awesomess, newday, mamarama, winningsong, soledad, unsunghero, butterflygirl, theones;
+var song_list = ["How Many Roses To Your Heart", "That Awesomeness", "New Day", "Mamarama", "Winning Song", "Lake Soledad", "Unsung Hero", "Butterfly Girl", "The Ones"];
+function initAudioPlayer(){
+
+	// Set object references;
+	playbtn = document.getElementById("playpausebtn");
+	mutebtn = document.getElementById("mute");
+	seekslider = document.getElementById("seekslider");
+	volumeslider = document.getElementById("volumeslider");
+	curtimetext = document.getElementById("curtimetext");
+	durtimetext = document.getElementById("durtimetext");
+	shuffle = document.getElementById("on-circle");
+	shuffle2 = document.getElementById("repeat_circle");
+
+
+
+	roses = document.getElementById("song1");
+	awesomeness = document.getElementById("song2");
+	newday = document.getElementById("song3");
+	mamarama = document.getElementById("song4");
+	winningsong = document.getElementById("song5");
+	soledad = document.getElementById("song6");
+	unsunghero = document.getElementById("song7");
+	butterflygirl = document.getElementById("song8");
+	theones = document.getElementById("song9");
+	
+
+
+	audio = new Audio();
+	dir = "audio/";
+	playlist = ["roses.mp3", "awesomeness.mp3", "newday.mp3", "mamarama.mp3", "winningsong.mp3", "soledad.mp3", "unsunghero.mp3", "butterflygirl.mp3", "theones.mp3"];
+	playlist_index = 0;
+	songlist_index = 0;
+	audio.src = dir + playlist[0];
+	audio.loop = false;
+	document.getElementById("triangle").id= "triangle";
+	
+
+
+	// Add Event Handling
+
+	seekslider.addEventListener("mousedown", function(event){ seeking=true; seek(event); });
+    seekslider.addEventListener("mousemove", function(event){ seek(event); });
+    seekslider.addEventListener("mouseup", function(){ seeking=false; });
+    volumeslider.addEventListener("mousemove", setVolume);
+    audio.addEventListener("timeupdate", function() { seektimeupdate (); });
+    //audio.addEventListener("ended", function() { switchTrack(); });
+    //audio.addEventListener("ended", function() { changeCSS(); });
+    audio.addEventListener("ended", function() { shuffled(); });
+    audio.addEventListener("ended", function() { repeat(); });
+
+	playbtn.addEventListener("click", playPause);
+	mutebtn.addEventListener("click", mute);
+	shuffle.addEventListener("click", shuffler);
+	shuffle2.addEventListener("click", onButton);
+
+    roses.addEventListener("click", changeTrack);
+	awesomeness.addEventListener("click", changeTrack2);
+	newday.addEventListener("click", changeTrack3);
+	mamarama.addEventListener("click", changeTrack4);
+	winningsong.addEventListener("click", changeTrack5);
+	soledad.addEventListener("click", changeTrack6);
+	unsunghero.addEventListener("click", changeTrack7);
+	butterflygirl.addEventListener("click", changeTrack8);
+	theones.addEventListener("click", changeTrack9);
+
+    
+
+
+    // Functions
+    //////////////////////////////////
+
+
+    function switchTrack(){
+		if(playlist_index == (playlist.length - 1)){
+			playlist_index = 0;
+			songlist_index = 0;
+		} else {
+			playlist_index++;
+			songlist_index++;
+		}
+
+
+		audio.src = dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + song_list[songlist_index];
+
+	}
+
+	function changeCSS(){
+		if(playlist_index == 0){
+			document.getElementById("song1").style.backgroundColor = "blue";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "red";
+		} else if(playlist_index == 1){
+			switchcss2();
+		} else if(playlist_index == 2){
+			switchcss3();
+		} else if(playlist_index == 3){
+			switchcss4();
+		} else if(playlist_index == 4){
+			switchcss5();
+		} else if(playlist_index == 5){
+			switchcss6();
+		} else if(playlist_index == 6){
+			switchcss7();
+		} else if(playlist_index == 7){
+			switchcss8();
+		} else if(playlist_index == 8){
+			switchcss9();
+		}
+
+	}
+
+	function switchcss(){
+		document.getElementById("song1").backgroundColor = "red";
+		document.getElementById("song2").backgroundColor = "blue";
+		document.getElementById("song3").backgroundColor = "red";
+		document.getElementById("song4").backgroundColor = "red";
+		document.getElementById("song5").backgroundColor = "red";
+		document.getElementById("song6").backgroundColor = "red";
+		document.getElementById("song7").backgroundColor = "red";
+		document.getElementById("song8").backgroundColor = "red";
+		document.getElementById("song9").backgroundColor = "red";
+
+	}
+
+	function switchcss2(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "blue";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "red";
+
+	}
+
+	function switchcss3(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "blue";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "red";
+
+	}
+
+	function switchcss4(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "blue";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "red";
+
+	}
+
+	function switchcss5(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "blue";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "red";
+
+	}
+
+	function switchcss6(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "blue";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "red";
+
+	}
+
+	function switchcss7(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "blue";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "red";
+
+	}
+
+	function switchcss8(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "blue";
+		document.getElementById("song9").style.backgroundColor = "red";
+
+	}
+
+	function switchcss9(){
+		document.getElementById("song1").style.backgroundColor = "red";
+		document.getElementById("song2").style.backgroundColor = "red";
+		document.getElementById("song3").style.backgroundColor = "red";
+		document.getElementById("song4").style.backgroundColor = "red";
+		document.getElementById("song5").style.backgroundColor = "red";
+		document.getElementById("song6").style.backgroundColor = "red";
+		document.getElementById("song7").style.backgroundColor = "red";
+		document.getElementById("song8").style.backgroundColor = "red";
+		document.getElementById("song9").style.backgroundColor = "blue";
+
+	}
+
+
+    function changeTrack(){
+    	if(audio.paused){
+    		rotate();
+    	}
+    	playlist_index = 0;
+    	songlist_index = 0;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "How Many Roses to Your Heart";
+
+		
+	}
+
+	$(document).ready(function(){
+    $("#song1").click(function(){
+        $("#song1").css("background-color", "blue");
+        $("#song2").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+    });
+});
+
+	function changeTrack2(){
+		if(audio.paused){
+    		rotate();
+    	}
+		document.getElementById("playlist_status").innerHTML=""
+		playlist_index = 1;
+		songlist_index = 1;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "That Awesomeness";
+
+	
+	}
+
+	$(document).ready(function(){
+	$("#song2").click(function(){
+		$("#song2").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+
+		});
+
+	});
+
+	function changeTrack3(){
+		if(audio.paused){
+    		rotate();
+    	}
+		playlist_index = 2;
+		songlist_index = 2;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "New Day";
+	
+	}
+
+	$(document).ready(function(){
+	$("#song3").click(function(){
+		$("#song3").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song2").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+
+		});
+
+	});
+
+	function changeTrack4(){
+		if(audio.paused){
+    		rotate();
+    	}
+		playlist_index = 3;
+		songlist_index = 3;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "Mamarama";
+
+	}
+
+	$(document).ready(function(){
+	$("#song4").click(function(){
+		$("#song4").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song2").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+
+		});
+
+	});
+
+	function changeTrack5(){
+		if(audio.paused){
+    		rotate();
+    	}
+		playlist_index = 4;
+		songlist_index = 4;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "Winning Song";
+		
+	  }
+
+	$(document).ready(function(){
+	$("#song5").click(function(){
+		$("#song5").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song2").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+		});
+
+	});
+
+	function changeTrack6(){
+		if(audio.paused){
+    		rotate();
+    	}
+		playlist_index = 5;
+		songlist_index = 5;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "Lake Soledad";
+		
+	}
+
+	$(document).ready(function(){
+	$("#song6").click(function(){
+		$("#song6").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song2").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+
+		});
+
+	});
+
+	function changeTrack7(){
+		if(audio.paused){
+    		rotate();
+    	}
+		playlist_index = 6;
+		songlist_index = 6;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "Unsung Hero";
+		
+	}
+
+	$(document).ready(function(){
+	$("#song7").click(function(){
+		$("#song7").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song2").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+
+		});
+
+	});
+
+	function changeTrack8(){
+		if(audio.paused){
+    		rotate();
+    	}
+		playlist_index = 7;
+		songlist_index = 7;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "Butterfly Girl";
+		
+	}
+
+	$(document).ready(function(){
+	$("#song8").click(function(){
+		$("#song8").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song2").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song9").css("background-color", "red");
+
+		});
+
+	});
+
+	function changeTrack9(){
+		if(audio.paused){
+    		rotate();
+    	}
+		playlist_index = 8;
+		songlist_index = 8;
+		audio.src=dir + playlist[playlist_index];
+		audio.play();
+		document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + "The Ones";
+		
+	}
+
+	$(document).ready(function(){
+	$("#song9").click(function(){
+		$("#song9").css("background-color", "blue");
+        $("#song1").css("background-color", "red");
+        $("#song2").css("background-color", "red");
+        $("#song3").css("background-color", "red");
+        $("#song4").css("background-color", "red");
+        $("#song5").css("background-color", "red");
+        $("#song6").css("background-color", "red");
+        $("#song7").css("background-color", "red");
+        $("#song8").css("background-color", "red");
+
+		});
+
+	});
+
+
+    function playPause(){
+		if(audio.paused){
+			document.getElementById("playlist_status").innerHTML = "Track" + (playlist_index + 1) + " - " + song_list[songlist_index];
+			audio.play();
+			document.getElementById("triangle").id= "pause";
+			rotate();
+		} else {
+			audio.pause();
+			stopped();
+			document.getElementById("pause").id = "triangle";	
+		}
+		changeCSS();
+	}
+	/////////////////////////////
+
+	function mute(){
+		if(audio.muted){
+			audio.muted = false;
+			document.getElementById("muter").id= "mute_icon";	
+		} else {
+			audio.muted = true;
+		    document.getElementById("mute_icon").id= "muter";	
+		}
+	}
+	///////////////////////////////////
+	function seek(event){
+		if(seeking){
+			seekslider.value = event.clientX - seekslider.offsetLeft;
+			seekto = audio.duration * (seekslider.value/100);
+			audio.currentTime = seekto;
+		}
+	}
+	///////////////////////////////////
+
+	function shuffler(){
+		if(on==false){
+		document.getElementById("on-circle").style.backgroundColor = "green";
+		on = true;
+		} else if(on==true) {
+		document.getElementById("on-circle").style.backgroundColor = "red";
+		on = false;
+	}
+
+}
+
+
+	///////////////////////////////////
+	function onButton(){
+		if(on1 == false){
+			document.getElementById("repeat_circle").style.backgroundColor = "green";
+			on1 = true;
+		} else if(on1 == true){
+			document.getElementById("repeat_circle").style.backgroundColor = "red";
+			on1 = false;
+		}
+	}
+
+	function shuffled(){
+		if(on == false && on1==false){
+			switchTrack();
+			changeCSS();
+		} else if(on == true && on1==false) {
+			playlist_index = Math.floor(Math.random() * 9);
+			audio.src = dir + playlist[playlist_index];
+			audio.play();
+			changeCSS();
+
+		}
+	}
+
+	function repeat(){
+		if(on1 == false){
+			changeCSS();
+		} else if(on1 == true) {
+			audio.currentTime = 0;
+			audio.src = dir + playlist[playlist_index];
+			audio.play();
+		}
+	}
+
+
+
+
+
+
+	////////////////////////////////
+	function setVolume(){
+		audio.volume = volumeslider.value/100;
+	}
+	///////////////////////////////////
+	function seektimeupdate() {
+		var nt = audio.currentTime * (100/audio.duration);
+		seekslider.value = nt
+		var curmins = Math.floor(audio.currentTime / 60);
+		var cursecs = Math.floor(audio.currentTime - curmins * 60);
+		var durmins = Math.floor(audio.duration/60);
+		var dursecs = Math.floor(audio.duration - durmins * 60);
+		if(cursecs <10) { cursecs = "0"+cursecs; }
+		if(dursecs <10) { dursecs = "0"+dursecs; }
+		if(curmins <10) { curmins = "0"+curmins; }
+		if(durmins <10) { durmins = "0"+durmins; }
+		curtimetext.innerHTML = curmins+":"+cursecs;
+		durtimetext.innerHTML = durmins+":"+durmins;
+	}
+
+
+}
+window.addEventListener("load", initAudioPlayer);
+
+</script>
+	
+ <!--<script src = "timelineHero.js"></script>-->
+
+</head>
+<body>
+	<div class="rays">
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/TweenMax.min.js"></script>
+    <script src = "spinner.js"></script>
+	 <img id = "spinner" src="compact_disc.png"/>
+	<div class = "container">
+		<label>
+			<div class="display-box">
+				<div id="audio_player">
+					<div id="audio_controls">
+						<div id="audio_player">
+							<div id= "song_display">
+								<div>
+									<marquee><h6 id="playlist_status"> Play </h6></marquee>
+								</div>
+								</div>
+							<div id="audio_controls">
+								<input id = "seekslider" type = "range" min="0" max="100" value="0" step="1">
+								<div id="timebox">
+								<span id = "curtimetext">00:00</span> / <span id="durtimetext"> 00:00 </span>
+								</div>
+								<input id = "volumeslider" type = "range" min="0" max="100" value="100" step="1">
+							</div>
+						</div>
+					</div>	
+				</div>
+			</div>
+
+
+			<div id="control-space">
+				<div class="container_button" id="playpausebtn">
+					<div class="hole">
+						<div class="button">
+							<div class="triangle" id="triangle">
+
+							</div>
+						</div>
+					</div>
+				</div>
+					<div id="shuffle"> <p> Repeat </p>
+						<div id="on-circle">
+						</div>
+					</div>
+					<div id="repeat"> <p> Shuffle </p> </div>
+						<div id="repeat_circle">
+						</div>
+					<div id="mutebtn">
+						<div class="container_button">
+							<div class="hole">
+								<div class="button" id="mute">
+									<div id="muter"></div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>	
+			</div>
+			<div class="circle">
+				<div class = "circle-inner">
+
+
+
+
+						<div id="plWrap">
+					<div id="plList">
+						<ul>
+							<li id="song1">
+								<div class="plItem">
+								<div class="plNum">01.</div>
+								<div class="plTitle">How Many Roses To Your Heart</div>
+
+								<div class="plLength">4:04</div>
+								</div>
+							</li>
+							<li id="song2">
+								<div class="plItem">
+								<div class="plNum">02.</div>
+								<div class="plTitle">That Awesomeness</div>
+								<div class="plLength">5:05</div>
+								</div>
+							</li>
+							<li id="song3">
+								<div class="plItem">
+								<div class="plNum">03.</div>
+								<div class="plTitle">New Day</div>
+								<div class="plLength">6:06</div>
+								</div>
+							</li>
+							<li id="song4">
+								<div class="plItem">
+								<div class="plNum">04.</div>
+								<div class="plTitle">Mamarama</div>
+								<div class="plLength">5:05</div>
+								</div>
+							</li>
+							<li id="song5">
+								<div class="plItem">
+								<div class="plNum">05.</div>
+								<div class="plTitle">Winning Song</div>
+								<div class="plLength">3:03</div>
+								</div>
+							</li>
+							<li id="song6">
+								<div class="plItem">
+								<div class="plNum">06.</div>
+								<div class="plTitle">Lake Soledad</div>
+								<div class="plLength">6:06</div>
+								</div>
+							</li>
+							<li id="song7">
+								<div class="plItem">
+								<div class="plNum">07.</div>
+								<div class="plTitle">Unsung Hero</div>
+								<div class="plLength">4:04</div>
+								</div>
+							</li>
+							<li id="song8">
+								<div class="plItem">
+								<div class="plNum">08.</div>
+								<div class="plTitle">Butterfly Girl</div>
+								<div class="plLength">5:05</div>
+								</div>
+							</li>
+							<li id="song9">
+								<div class="plItem">
+								<div class="plNum">09.</div>
+								<div class="plTitle">The Ones</div>
+								<div class="plLength">4:04</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					</div>
+					<p id="credits"> Words and Music By Kuda Mutama </p>
+				
+
+
+
+				</div>
+				</div>
+			</label>
+			</div>	
+		
+
+
+
+	</div>
+
+<p id="credits"> Words and Music By Kuda Mutama </p>
+
+
+
+</body>
+</html>
